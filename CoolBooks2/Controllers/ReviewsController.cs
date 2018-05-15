@@ -40,7 +40,7 @@ namespace CoolBooks2.Controllers
         public ActionResult Create()
         {
             ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Email");
-            ViewBag.BookId = new SelectList(db.Books, "Id", "UserId");
+            ViewBag.BookId = new SelectList(db.Books, "Id", "Title");
             return View();
         }
 

@@ -36,6 +36,22 @@ namespace CoolBooks2.Controllers
             return View(book);
         }
 
+        // GET: Books/View/5
+        public ActionResult DetailsImage(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = db.Books.Find(id);
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+            return View(book);
+        }
+
+
         // GET: Books/Create
         public ActionResult Create()
         {
@@ -52,6 +68,8 @@ namespace CoolBooks2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,UserId,AuthorId,GenreId,Title,AlternativeTitle,Part,Description,ISBN,PublishDate,ImagePath,Created,IsDeleted")] Book book)
         {
+            book.Created = DateTime.Now;
+
             if (ModelState.IsValid)
             {
                 db.Books.Add(book);
