@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using CoolBooks2.Models;
+using CoolBooks2.ViewModels;
 
 namespace CoolBooks2.Controllers
 {
@@ -50,6 +48,45 @@ namespace CoolBooks2.Controllers
             }
             return View(book);
         }
+
+        // GET: BookReview
+        public ActionResult BookReview(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Book book = db.Books.Find(id);
+            if (book == null)
+            {
+                return HttpNotFound();
+            }
+
+            BookReviewModel bookReviewModel = new BookReviewModel();
+            bookReviewModel.Book = book;
+            bookReviewModel.Review = new Review();
+            return View(bookReviewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BookReview(BookReviewModel bookReviewModel)
+        {
+            bookReviewModel.Review.UserId = bookReviewModel.Book.UserId;
+            bookReviewModel.Review.BookId = bookReviewModel.Book.Id;
+            bookReviewModel.Review.Created = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                db.Reviews.Add(bookReviewModel.Review);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Email", bookReviewModel.Review.UserId);
+            ViewBag.BookId = new SelectList(db.Books, "Id", "UserId", bookReviewModel.Review.BookId);
+            return View(bookReviewModel);
+        }
+
 
 
         // GET: Books/Create

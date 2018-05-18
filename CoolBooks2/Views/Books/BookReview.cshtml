@@ -1,0 +1,92 @@
+﻿@model CoolBooks2.ViewModels.BookReviewModel
+@{
+    ViewBag.Title = "BookReview";
+}
+
+<h2>BookReview</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <h4>Book</h4>
+        <hr />
+        <div class="row">
+            <div class=" col-md-4">
+                <img src="@Url.Content(Model.Book.ImagePath)" alt="Image" style="height:400px;width:300px;" />
+            </div>
+            <div class=" col-md-8">
+                <dl>
+                    <dd>
+                        <h3>
+                            @Html.DisplayFor(model => model.Book.Title)
+                        </h3>
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Book.Description)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Book.Description)
+                    </dd>
+                    <dt>
+                        Genre
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Book.Genre.Name)
+                    </dd>
+                    <dt>Författare</dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Book.Author.FirstName)
+                        @Html.DisplayFor(model => model.Book.Author.LastName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Book.Created)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Book.Created)
+                    </dd>
+                </dl>
+                <h3>Reviews</h3>
+                <dl>
+                    @foreach (var item in Model.Book.Reviews)
+                    {
+                        <dt>
+                            @Html.DisplayFor(m => item.AspNetUser.UserName)
+                            @Html.DisplayFor(m => item.Created)
+                        </dt>
+
+                        <dd>@Html.DisplayFor(m => item.Text)</dd>
+
+                    }
+                </dl>
+                <h4>Ny Review</h4>
+                <dl>
+                    <dt>
+                        @*@Model.Review.UserId = @Model.Book.UserId;*@
+                        @Html.DisplayFor(m => Model.Book.AspNetUser.UserName)
+                    </dt>
+                    <dd>
+
+                        @Html.TextAreaFor(mmodel => Model.Review.Text, 5, 20, htmlAttributes: new { @class = "form-control" })
+                        @Html.HiddenFor(m => m.Book.Id)
+                        @Html.HiddenFor(m => m.Book.UserId)
+                        <input type="submit" value="Save" class="btn btn-default" />
+
+                    </dd>
+                </dl>
+
+
+            </div>
+        </div>
+    </div>
+}
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Book.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+

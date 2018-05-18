@@ -11,7 +11,8 @@ namespace CoolBooks2.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Review
     {
         public int Id { get; set; }
@@ -20,7 +21,8 @@ namespace CoolBooks2.Models
         public string Title { get; set; }
         public string Text { get; set; }
         public Nullable<byte> Rating { get; set; }
-        public System.DateTime Created { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]        public System.DateTime Created { get; set; }
         public bool IsDeleted { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
